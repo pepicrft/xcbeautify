@@ -58,6 +58,19 @@ struct Xcbeautify: ParsableCommand {
     @Option(help: "The name of JUnit report file name")
     var junitReportFilename = "junit.xml"
 
+    @Option
+    var minimumVersion: SemanticVersion = SemanticVersion(argument: version)!
+
+    func validate() throws {
+        guard let currentVersion = SemanticVersion(argument: version) else {
+            throw ValidationError("Failed to fetch current version.")
+        }
+
+        guard currentVersion >= minimumVersion else {
+            throw ValidationError("Current version is \(currentVersion), but requires \(minimumVersion).")
+        }
+    }
+
     func run() throws {
         #if DEBUG && os(macOS)
         let start = CFAbsoluteTimeGetCurrent()
