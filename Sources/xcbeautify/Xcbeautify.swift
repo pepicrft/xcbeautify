@@ -83,16 +83,6 @@ struct Xcbeautify: ParsableCommand {
         let output = OutputHandler(quiet: quiet, quieter: quieter, isCI: isCI) { print($0) }
         let junitReporter = JunitReporter()
 
-        func readLine() -> String? {
-            let line = Swift.readLine()
-            if let line {
-                if report.contains(.junit) {
-                    junitReporter.add(line: line)
-                }
-            }
-            return line
-        }
-
         let parser = Parser()
 
         let formatter = XcbeautifyLib.Formatter(
@@ -114,6 +104,11 @@ struct Xcbeautify: ParsableCommand {
 
                 continue
             }
+
+            if report.contains(.junit) {
+                junitReporter.add(captureGroup: captureGroup, line: line)
+            }
+
             guard let formatted = formatter.format(captureGroup: captureGroup) else { continue }
             output.write(captureGroup.outputType, formatted)
         }
