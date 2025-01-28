@@ -36,6 +36,13 @@ let package = Package(
                 "XMLCoder",
             ]
         ),
+        .executableTarget(
+            name: "ParsingCheck",
+            dependencies: [
+                "XcbeautifyLib",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+            ]
+        ),
         .testTarget(
             name: "XcbeautifyLibTests",
             dependencies: ["XcbeautifyLib"],

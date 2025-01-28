@@ -108,3 +108,30 @@ jobs:
         with:
           files: info.lcov
           token: ${{ secrets.CODECOV_TOKEN }}
+
+  end-to-end:
+    name: End-to-End Test (${{ matrix.xcode_version }})
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - xcode_version: "15.3"
+            uncaptured_output: 255
+          - xcode_version: "15.4"
+            uncaptured_output: 255
+          - xcode_version: "16.0"
+            uncaptured_output: 255
+          - xcode_version: "16.1"
+            uncaptured_output: 255
+    env:
+      BUILD_LOG: ${{ matrix.xcode_version }}.log
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: "cpisciotta/GitHub-Issues-Browser"
+          path: "Demo"
+      - run: swift build
+      - run: set -euo pipefail && xcodebuild clean test -project 'Demo/GHIssues.xcodeproj' -scheme GHIssues -destination 'platform=iOS Simulator,name=iPhone 15 Pro' -derivedDataPath DerivedData CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGN_ENTITLEMENTS="" CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=NO > ${{ env.BUILD_LOG }}
+      - run: ./.build/debug/ParsingCheck --file-path ${{ env.BUILD_LOG }} --uncaptured-output ${{ matrix.uncaptured_output }}
