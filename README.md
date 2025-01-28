@@ -51,10 +51,16 @@ let package = Package(
     name: "BuildTools",
     platforms: [.macOS(.v10_11)],
     dependencies: [
-      .package(url: "https://github.com/cpisciotta/xcbeautify", from: "1.7.0"),
+      .package(url: "https://github.com/cpisciotta/xcbeautify", from: "2.11.0"),
     ],
     targets: [
-      .target(name: "BuildTools", path: "")
+        .target(
+            name: "BuildTools",
+            dependencies: [
+                .product(name: "xcbeautify", package: "xcbeautify"),
+            ],
+            path: ""
+        )
     ]
 )
 ```
