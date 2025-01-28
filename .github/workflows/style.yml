@@ -4,7 +4,9 @@ on: pull_request
 
 jobs:
   SwiftFormat:
-    runs-on: macos-latest
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/nicklockwood/swiftformat:0.55.4
     steps:
       - uses: actions/checkout@v4
       - run: ./tools/lint
