@@ -112,6 +112,7 @@ protocol OutputRendering {
     func formatSwiftTestingPassingArgument(group: SwiftTestingPassingArgumentCaptureGroup) -> String?
     func formatSwiftDriverCompilationTarget(group: SwiftDriverCompilationTarget) -> String?
     func formatMkDirCaptureGroup(group: MkDirCaptureGroup) -> String?
+    func formatNote(group: NoteCaptureGroup) -> String
 }
 
 extension OutputRendering {
@@ -726,5 +727,9 @@ extension OutputRendering {
 
     func formatMkDirCaptureGroup(group: MkDirCaptureGroup) -> String? {
         nil
+    }
+
+    func formatNote(group: NoteCaptureGroup) -> String {
+        colored ? "note: ".s.Bold.f.Cyan + group.note : "note: " + group.note
     }
 }

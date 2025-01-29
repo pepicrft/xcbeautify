@@ -753,4 +753,9 @@ final class TeamCityRendererTests: XCTestCase {
         let input = "EmitSwiftModule normal arm64 (in target 'Target' from project 'Project')"
         XCTAssertNil(noColoredFormatted(input))
     }
+
+    func testNote() {
+        let formatted = noColoredFormatted("note: Building targets in dependency order")
+        XCTAssertEqual(formatted, "note: Building targets in dependency order")
+    }
 }

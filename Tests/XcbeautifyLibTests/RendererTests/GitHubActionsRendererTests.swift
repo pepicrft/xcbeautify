@@ -748,4 +748,9 @@ final class GitHubActionsRendererTests: XCTestCase {
         let input = "EmitSwiftModule normal arm64 (in target 'Target' from project 'Project')"
         XCTAssertNil(logFormatted(input))
     }
+
+    func testNote() {
+        let formatted = logFormatted("note: Building targets in dependency order")
+        XCTAssertEqual(formatted, "note: Building targets in dependency order")
+    }
 }

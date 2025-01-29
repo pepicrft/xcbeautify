@@ -2399,3 +2399,21 @@ struct EmitSwiftModuleCaptureGroup: CaptureGroup {
         self.project = project
     }
 }
+
+/// This output is printed when running
+/// `xcodebuild test -scheme xcbeautify-Package -destination 'platform=macOS,arch=arm64'`.
+struct NoteCaptureGroup: CaptureGroup {
+    static let outputType: OutputType = .task
+
+    /// Regular expression captured groups:
+    /// $1 = note
+    static let regex = XCRegex(pattern: "^note: (.*)$")
+
+    let note: String
+
+    init?(groups: [String]) {
+        assert(groups.count == 1)
+        guard let note = groups[safe: 0] else { return nil }
+        self.note = note
+    }
+}

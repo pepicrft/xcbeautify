@@ -327,4 +327,39 @@ final class ParserTests: XCTestCase {
         XCTAssertEqual(captureGroup.target, "Target")
         XCTAssertEqual(captureGroup.project, "Project")
     }
+
+    func testMatchNote() throws {
+        let inputs = [
+            ("note:", "Building targets in dependency order"),
+            ("Note:", "Building targets in dependency order"),
+            ("note:", "Metadata extraction skipped. No AppIntents.framework dependency found. (in target 'Target' from project 'Project')"),
+            ("Note:", "Metadata extraction skipped. No AppIntents.framework dependency found. (in target 'Target' from project 'Project')"),
+            ("note:", #"Run script build phase 'SomeRunScriptBuildPhase' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Target' from project 'Project')"#),
+            ("Note:", #"Run script build phase 'SomeRunScriptBuildPhase' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Target' from project 'Project')"#),
+            ("note:", "Target dependency graph (12 targets)"),
+            ("Note:", "Target dependency graph (12 targets)"),
+        ]
+
+        for (keyword, note) in inputs {
+            let input = "\(keyword) \(note)"
+            let captureGroup = try XCTUnwrap(parser.parse(line: input) as? NoteCaptureGroup)
+            XCTAssertEqual(captureGroup.note, note)
+        }
+    }
+
+    func testNotMatchNote() throws {
+        let inputs = [
+            "in the note middle",
+            "in the note: middle",
+            "note Building targets in dependency order",
+            "Note Metadata extraction skipped.",
+            "Target dependency graph (12 targets) note",
+            "Target dependency graph (12 targets) note:",
+            "Target dependency graph (12 targets): note:",
+        ]
+
+        for input in inputs {
+            XCTAssertNil(parser.parse(line: input))
+        }
+    }
 }
