@@ -133,6 +133,12 @@ package final class Parser {
         NonPCHClangCommandCaptureGroup.self,
     ]
 
+    #if DEBUG
+    func __for_test__captureGroupTypes() -> [any CaptureGroup.Type] {
+        captureGroupTypes
+    }
+    #endif
+
     // MARK: - Init
 
     package init() { }
