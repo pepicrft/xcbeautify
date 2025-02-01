@@ -491,8 +491,8 @@ class JunitReporterTests: XCTestCase {
         let parser = Parser()
         let reporter = JunitReporter()
         for component in parallelTests.components(separatedBy: .newlines) {
-            if let captureGroup = parser.parse(line: component) {
-                reporter.add(captureGroup: captureGroup, line: component)
+            if let captureGroup = parser.parse(line: component.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                reporter.add(captureGroup: captureGroup, line: component.trimmingCharacters(in: .whitespacesAndNewlines))
             }
         }
         let data = try reporter.generateReport()
