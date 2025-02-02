@@ -398,9 +398,12 @@ class JunitReporterTests: XCTestCase {
     """
 
     func testJunitReport() throws {
+        let parser = Parser()
         let reporter = JunitReporter()
         for component in testLog.components(separatedBy: .newlines) {
-            reporter.add(line: component)
+            if let group = parser.parse(line: component) {
+                reporter.add(captureGroup: group, line: component)
+            }
         }
         let data = try reporter.generateReport()
         let xml = String(data: data, encoding: .utf8)!
@@ -485,9 +488,12 @@ class JunitReporterTests: XCTestCase {
     """
 
     func testParallelJunitReport() throws {
+        let parser = Parser()
         let reporter = JunitReporter()
         for component in parallelTests.components(separatedBy: .newlines) {
-            reporter.add(line: component)
+            if let captureGroup = parser.parse(line: component.trimmingCharacters(in: .whitespacesAndNewlines)) {
+                reporter.add(captureGroup: captureGroup, line: component.trimmingCharacters(in: .whitespacesAndNewlines))
+            }
         }
         let data = try reporter.generateReport()
         let xml = String(data: data, encoding: .utf8)!
